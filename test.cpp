@@ -6,62 +6,26 @@ using testing::Test;
 
 #define GTEST_COUT std::cerr << "[          ] [ INFO ]"
 
-// The fixture for testing class Project1. From google test primer.
-class Combine2NumberTest : public ::testing::Test {
-  protected:
-	// You can remove any or all of the following functions if its body
-	// is empty.
+typedef std::tr1::tuple<short, short> TwoNums;
 
-	Combine2NumberTest() {
-		// You can do set-up work for each test here.
-	}
 
-	virtual ~Combine2NumberTest() {
-		// You can do clean-up work that doesn't throw exceptions here.
-	}
-
-	// If the constructor and destructor are not enough for setting up
-	// and cleaning up each test, you can define the following methods:
-	virtual void SetUp() {
-		// Code here will be called immediately after the constructor (right
-		// before each test).
-	}
-
-	virtual void TearDown() {
-		// Code here will be called immediately after each test (right
-		// before the destructor).
-	}
-
-	// Objects declared here can be used by all tests in the test case for Project1.
-	Combine2Numbers p;
+class Combine2NumTest : public ::testing::TestWithParam<TwoNums> {
+  public:
+    Combine2Numbers p;
 };
 
-TEST_F(Combine2NumberTest, Minus400ToPlus400) {
-    GTEST_COUT << " *** Running all tests..." << std::endl;
-    GTEST_COUT << " *** sizeof(short):" << sizeof(short) << std::endl;
-    GTEST_COUT << " *** sizeof(int):" << sizeof(int) << std::endl;
-
-    EXPECT_EQ(-400, p.getA(p.combine2Number(-400, 400)));
-    EXPECT_EQ(400, p.getB(p.combine2Number(-400, 400)));
-
-    EXPECT_EQ(-400, p.getA(p.combine2Number(-400,-400)));
-    EXPECT_EQ(-400, p.getB(p.combine2Number(-400,-400)));
-
-    EXPECT_EQ(400, p.getA(p.combine2Number(400, 400)));
-    EXPECT_EQ(400, p.getB(p.combine2Number(400, 400)));
-
-    EXPECT_EQ(400, p.getA(p.combine2Number(400, -400)));
-    EXPECT_EQ(-400, p.getB(p.combine2Number(400, -400)));
-
-    EXPECT_EQ(0, p.getA(p.combine2Number(0, 0)));
-    EXPECT_EQ(0, p.getB(p.combine2Number(0, 0)));
-
-    EXPECT_EQ(-128, p.getA(p.combine2Number(-128, 127)));
-    EXPECT_EQ(127, p.getB(p.combine2Number(-128, 127)));
-
-    EXPECT_EQ(127, p.getA(p.combine2Number(127, -128)));
-    EXPECT_EQ(-128, p.getB(p.combine2Number(127, -128)));
+TEST_P(Combine2NumTest, testAll) {
+    short a = std::tr1::get<0>(GetParam());
+    short b = std::tr1::get<1>(GetParam());
+    GTEST_COUT << "a:" << a << " b:" << b;
+    EXPECT_EQ(a, p.getA(p.combine2Number(a, b)));
+    EXPECT_EQ(b, p.getB(p.combine2Number(a, b)));
 }
+
+INSTANTIATE_TEST_CASE_P(TestThemAll,
+                        Combine2NumTest,
+                        testing::Combine(testing::Range((short)-400, (short)401),
+                                         testing::Range((short)-400, (short)401)));
 
 int main (int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
