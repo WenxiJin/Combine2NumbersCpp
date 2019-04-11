@@ -4,16 +4,16 @@ using namespace std;
 
 class Combine2Numbers {
   public:
-    static int combine2Number(short a, short b) {
-        return (int) a << 16 | (b & 0xffff);
+    static short combine2Number(char a, char b) {
+        return (short) a << 8 | (b & 0xff);
     }
 
-    static short getA(int combinedNumber) {
-        return (short)((combinedNumber >> 16) & 0xffff);
+    static char getA(short combinedNumber) {
+        return (char)((combinedNumber >> 8) & 0xff);
     }
 
-    static short getB(int combinedNumber) {
-        return (short)(combinedNumber & 0xffff);
+    static char getB(short combinedNumber) {
+        return (char)(combinedNumber & 0xff);
     }
 
 };
